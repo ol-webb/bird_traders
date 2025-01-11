@@ -5,7 +5,6 @@ from ultralytics import YOLO
 from lumibot.strategies import Strategy
 from lumibot.brokers import Alpaca
 from lumibot.traders import Trader
-from lumibot.brokers import DummyBroker
 
 
 
@@ -27,9 +26,10 @@ class BirdTrader(Strategy):
               "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone",
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
               "teddy bear", "hair drier", "toothbrush"]
+        self.symbol = "BTC/USD"
 
 
-    def on_start(self):
+    def before_starting_trading(self):
         """
         Called once at the start of the strategy.
         Open the camera and initialize the YOLO model.
@@ -90,13 +90,13 @@ class BirdTrader(Strategy):
             print(f"Object {idx + 1} is in the {'right' if obj['side_of_image'] == 1 else 'left'} of the image.")
 
             # Buy if on the right (1), sell if on the left (0), with cooldown
-            if obj["class"] == "bird" and current_time - self.last_trade_time > self.cooldown_seconds:
+            if obj["class"] == "cell phone" and current_time - self.last_trade_time > self.cooldown_seconds:
                 if obj["side_of_image"] == 1:
-                    print(f"Bird detected on the right! Placing a BUY order.")
-                    order = self.create_order("AAPL", 10, "buy")
+                    print(f"cell phone detected on the right! Placing a BUY order.")
+                    order = self.create_order("BTC/USD", 0.00001, "buy")
                 else:
-                    print(f"Bird detected on the left! Placing a SELL order.")
-                    order = self.create_order("AAPL", 10, "sell")
+                    print(f"cell phone detected on the left! Placing a SELL order.")
+                    order = self.create_order("BTC/USD", 0.00001, "sell")
 
                 self.submit_order(order)
                 self.last_trade_time = current_time  # Update cooldown
@@ -113,17 +113,26 @@ class BirdTrader(Strategy):
             self.camera.release()  # Release the camera
 
 
+
+    def before_market_opens(self):
+        if "USD" in self.symbol:  # Assuming you're using crypto like BTC/USD
+            print("Crypto market is always open. Skipping market hours check.")
+            return
+        super().before_market_opens()
+
+
+
+
 if __name__ == "__main__":
     # Alpaca configuration
     ALPACA_CONFIG = {
-        "API_KEY": "PKPAIX0CLVH00L9BS700",
-        "API_SECRET": "yYRt6K1YM7RcLuXvAE41GWapIRfJB3CFOCZsuN1y",
+        "API_KEY": "PKR64DFAG0MLFMO9GCSP",
+        "API_SECRET": "xt8iPQ8bjlrBs3rszdqkCeYJjiKtYx0HCuNpwYQ3",
         "PAPER": True,  # Use Alpaca's paper trading environment
     }
 
     # Create the broker instance
-    #broker = Alpaca(ALPACA_CONFIG)
-    broker = DummyBroker()
+    broker = Alpaca(ALPACA_CONFIG)
 
     # Initialize the strategy
     strategy = BirdTrader(broker=broker)

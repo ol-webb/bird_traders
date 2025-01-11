@@ -1,2 +1,8 @@
 alpaca.txt
 .env
+keys.txt
+alpaca_keys.json
+bird_vids/
+logs/
+video_creation/
+yolo-Weights/
