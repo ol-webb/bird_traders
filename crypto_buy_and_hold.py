@@ -2,6 +2,7 @@ from lumibot.brokers import Alpaca
 from lumibot.entities import Asset
 from lumibot.strategies import Strategy
 from lumibot.traders import Trader
+import json
 
 
 class SimpleCryptoTrader(Strategy):
@@ -31,13 +32,18 @@ class SimpleCryptoTrader(Strategy):
 
 
 
-
 if __name__ == "__main__":
     # Alpaca configuration
+    with open("alpaca_keys.json", "r") as file:
+        data = json.load(file)
+
+    alpaca_key = data['alpaca_key']
+    alpaca_secret = data['alpaca_secret']
+
     ALPACA_CONFIG = {
-        "API_KEY": "PKJ3L1FYT2455UW0MQ0S",
-        "API_SECRET": "Uu8onQzQ749fNXklgBSO3N1NaELEqWypN4eeaSSz",
-        "PAPER": True,  # Use Alpaca's paper trading environment
+        "API_KEY": alpaca_key,
+        "API_SECRET": alpaca_secret,
+        "PAPER": True,
     }
 
     # Create the broker instance
