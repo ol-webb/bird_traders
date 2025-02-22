@@ -5,8 +5,7 @@ from ultralytics import YOLO
 from lumibot.strategies import Strategy
 from lumibot.brokers import Alpaca
 from lumibot.traders import Trader
-
-
+import json
 
 
 
@@ -115,7 +114,7 @@ class BirdTrader(Strategy):
 
 
     def before_market_opens(self):
-        if "USD" in self.symbol:  # Assuming you're using crypto like BTC/USD
+        if "USD" in self.symbol:
             print("Crypto market is always open. Skipping market hours check.")
             return
         super().before_market_opens()
@@ -124,13 +123,17 @@ class BirdTrader(Strategy):
 
 
 if __name__ == "__main__":
-    # Alpaca configuration
-    ALPACA_CONFIG = {
-        "API_KEY": "PKR64DFAG0MLFMO9GCSP",
-        "API_SECRET": "xt8iPQ8bjlrBs3rszdqkCeYJjiKtYx0HCuNpwYQ3",
-        "PAPER": True,  # Use Alpaca's paper trading environment
-    }
+    with open("alpaca_keys.json", "r") as file:
+        data = json.load(file)
 
+    alpaca_key = data['alpaca_key']
+    alpaca_secret = data['alpaca_secret']
+
+    ALPACA_CONFIG = {
+        "API_KEY": alpaca_key,
+        "API_SECRET": alpaca_secret,
+        "PAPER": True,
+    }
     # Create the broker instance
     broker = Alpaca(ALPACA_CONFIG)
 
@@ -141,5 +144,4 @@ if __name__ == "__main__":
     trader = Trader()
     trader.add_strategy(strategy)
 
-    # Run the trader in real-time
     trader.run_all()
