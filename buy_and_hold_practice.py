@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import json
 from lumibot.strategies.strategy import Strategy
 
 """
@@ -75,9 +75,16 @@ if __name__ == "__main__":
         # Print the results
         print(results)
     else:
+
+        with open("alpaca_keys.json", "r") as file:
+            data = json.load(file)
+
+        alpaca_key = data['alpaca_key']
+        alpaca_secret = data['alpaca_secret']
+
         ALPACA_CONFIG = {
-            "API_KEY": "PKSJFXDDKO54ARQW1NP1",
-            "API_SECRET": "sRgJX443iDfaQJIwqqtrjIbggG4Rr0qKXC9PFBq9",
+            "API_KEY": alpaca_key,
+            "API_SECRET": alpaca_secret,
             "PAPER": True,
         }
 
