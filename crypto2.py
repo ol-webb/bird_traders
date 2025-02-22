@@ -13,13 +13,13 @@ class BirdTrader(Strategy):
         Initialization for the strategy.
         """
         self.symbol = "BTC/USD"  # Symbol for trading
-        self.order_qty = 0.005  # Quantity for orders
+        self.order_qty = 0.004  # Quantity for orders
         self.target_class = "bird"  # The object to detect
         self.threshold = 0.1  # Confidence threshold for detection
         self.trade_made = False  # Flag to indicate if a trade has been made
         self.camera = None  # Placeholder for the camera
         self.yolo_model = None  # Placeholder for YOLO model
-        self.cooldown_time = 5  # Cooldown time in seconds
+        self.cooldown_time = 10  # Cooldown time in seconds
         self.last_trade_time = 0  # Time of the last trade
         self.set_market("24/7")
         self.camera = cv2.VideoCapture(1)  # Open the camera
